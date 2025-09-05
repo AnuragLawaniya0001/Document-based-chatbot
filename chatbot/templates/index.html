@@ -7,7 +7,7 @@
   <title>RAG Chatbot</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="csrf-token" content="{{ csrf_token }}">
-  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link rel="stylesheet" href="{% static 'chatbot/style.css' %}">
 </head>
 <body>
     
@@ -19,7 +19,8 @@
 
       <div class="file-area">
         <label class="file-choose" id="chooseLabel">Choose files</label>
-        <input type="file" id="fileInput" multiple>
+        <input type="file" id="fileInput" name="files" multiple>
+
 
         <div id="fileList" class="file-list">No files chosen</div>
 
@@ -46,7 +47,7 @@
     </main>
   </div>
 
-  <script src="{% static 'scripts.js' %}"></script>
+  <script src="{% static 'chatbot/script.js' %}"></script>
   {% csrf_token %}
 </body>
 </html>

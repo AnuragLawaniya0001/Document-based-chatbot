@@ -1,12 +1,18 @@
 import google.generativeai as genai
-import os
+from decouple import config
 
-genai.configure(api_key=os.environ["GENAI_API_KEY"])
+# ✅ Configure Gemini API
+genai.configure(api_key=config("GENAI_API_KEY", default=""))
 
+# ✅ Always return the correct embedding model
 def load_embedding_model():
-    return "gemini-embeddings"
+    return "models/embedding-001"
 
-def embed_texts(chunks, model="models/embedding-001"):
+# ✅ Embed a list of text chunks
+def embed_texts(chunks, model=None):
+    if model is None:
+        model = load_embedding_model()
+
     embeddings = []
     for chunk in chunks:
         response = genai.embed_content(
