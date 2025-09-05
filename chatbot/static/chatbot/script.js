@@ -1,5 +1,3 @@
-// chatbot/static/script.js
-// Ensure this file is saved at chatbot/static/script.js
 
 // ✅ CSRF token (from <meta name="csrf-token"> in your template)
 const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -76,16 +74,62 @@ uploadConfirmBtn.addEventListener('click', async () => {
   }
 });
 
-// Utility: append message
+
+function formatAnswer(text) {
+  // Converts **text** to <strong>text</strong>
+  const convertBold = (line) => line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  // Split the whole response into sections based on one or more empty lines
+  const sections = text.split(/\n\s*\n/);
+
+  return sections.map(section => {
+    // Trim the section and skip if empty
+    const trimmedSection = section.trim();
+    if (!trimmedSection) return '';
+
+    const lines = trimmedSection.split('\n');
+
+    // Check if all lines in the section look like list items
+    const isList = lines.every(l => /^\s*[*\-\d]+\.? /.test(l.trim()));
+
+    if (isList) {
+      // Check if it's an ordered (numbered) list
+      const isOrdered = /^\s*\d/.test(lines[0].trim());
+      let listHtml = isOrdered ? '<ol>' : '<ul>';
+      listHtml += lines.map(line => {
+        // Remove the list marker (e.g., "1. ", "* ") before processing
+        const content = line.trim().replace(/^[*\-\d]+\.?\s*/, '');
+        return `<li>${convertBold(content)}</li>`;
+      }).join('');
+      listHtml += isOrdered ? '</ol>' : '</ul>';
+      return `<div class="section">${listHtml}</div>`;
+    } else {
+      // If not a list, treat as a paragraph, preserving line breaks
+      const paragraphHtml = '<p>' + lines.map(line => convertBold(line)).join('<br>') + '</p>';
+      return `<div class="section">${paragraphHtml}</div>`;
+    }
+  }).join('');
+}
+
+
+// Append message to the chat box
 function appendMessage(role, text) {
   const el = document.createElement('div');
   el.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
-  el.innerText = text;
+
+  if (role === 'bot') {
+    // Use the new formatting function for bot responses
+    el.innerHTML = formatAnswer(text);
+  } else {
+    // User messages are plain text
+    el.innerText = text;
+  }
+
   chatBox.appendChild(el);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// show typing indicator
+// Show the typing indicator
 function showTyping() {
   const el = document.createElement('div');
   el.className = 'msg bot';
@@ -98,10 +142,13 @@ function showTyping() {
   return el;
 }
 
-// Chat send
+// Chat send functionality
 chatBtn.addEventListener('click', sendQuery);
 userQuery.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') sendQuery();
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault(); // Prevents adding a new line
+    sendQuery();
+  }
 });
 
 async function sendQuery() {
