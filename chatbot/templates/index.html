@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RAG Chatbot</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="chat-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">📚</div>
+
+      <div class="file-area">
+        <label class="file-choose" id="chooseLabel">Choose files</label>
+        <input type="file" id="fileInput" multiple>
+
+        <div id="fileList" class="file-list">No files chosen</div>
+
+        <button id="uploadConfirmBtn" class="btn primary" disabled>Upload Files</button>
+        <div id="uploadStatus" class="upload-status"></div>
+      </div>
+    </aside>
+
+    <!-- Main chat area -->
+    <main class="main">
+      <header class="chat-header">
+        <div class="chat-title">RAG Chatbot</div>
+        <div class="chat-sub">Ask questions about uploaded documents</div>
+      </header>
+
+      <section id="chatBox" class="chat-box">
+        <!-- messages will be appended here -->
+      </section>
+
+      <div class="chat-input">
+        <input id="userQuery" type="text" placeholder="Type your message..." autocomplete="off">
+        <button id="chatBtn" class="btn send">➤</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

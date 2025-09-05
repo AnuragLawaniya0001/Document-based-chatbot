@@ -1,0 +1,9 @@
+django
+python-decouple
+google-generativeai
+sentence-transformers
+scikit-learn
+numpy
+PyPDF2
+gunicorn
+whitenoise
