@@ -16,7 +16,8 @@ function getCookie(name) {
   }
   return cookieValue;
 }
-const csrftoken = getCookie('csrftoken');
+const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 
 // Elements
 const fileInput = document.getElementById('fileInput');

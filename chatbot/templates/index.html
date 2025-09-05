@@ -1,4 +1,5 @@
 {% load static %}
+{% csrf_token %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
   <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
+    
   <div class="chat-container">
 
     <!-- Sidebar -->
@@ -45,5 +47,6 @@
   </div>
 
   <script src="{% static 'scripts.js' %}"></script>
+  {% csrf_token %}
 </body>
 </html>
